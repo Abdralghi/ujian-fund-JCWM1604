@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table, th, tr, td{
+            border-collapse: collapse;
+            border: 1px solid black;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>FORM USERS</h1>
+    <br>
+
+    <input type="text" placeholder="username" id="username">
+    &nbsp;
+    <input type="text" placeholder="email" id="email">
+    role :
+    <select id="peran">
+        <option value="0">user</option>
+        <option value="1">admin</option>
+    </select>
+    <br><br>
+    <input type="button" value="ADD USER" onclick="addUser()">
+    <br>
+    <h1>USERS DATA</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="renderData">
+            <tr>
+               
+            </tr>
+        </tbody>
+    </table>
+</body>
+<script>
+    
+    class Users{
+        constructor(_username, _email, _role){
+            this.username = _username
+            this.email = _email
+            this.role = _role
+        }
+    }
+
+    var role = ['user', 'admin']
+    var indexedit = -1
+    var indexdelete = -1
+
+    
+    var ListUser = [
+        new Users('alee', 'alee@gmail.com', role[0]),
+        new Users('jennie', 'jenniebp@gmail.com', role[1]),
+        new Users('elsa', 'elsa@disney.com', role[1]),
+    ]
+    
+    const addUser = function(){
+        var namainput =  document.getElementById('username').value 
+        var namaemail = document.getElementById('email').value 
+        printData()
+    } 
+    
+    
+    const printData=function(){
+        var result = ListUser.map((val,index)=>{
+            if(indexdelete==index){
+                return `<tr>
+                    <td>${index+1}</td>
+                            <td>${val.username}</td>
+                            <td>${val.email}</td>
+                            <td>${val.role}</td>
+                            <td>
+                                <input type="button" value="Yes" onclick="onDeleteYes(${index})">
+                                <input type="button" value="No" onclick="onDeleteNo()">
+                                </td>
+                                </tr>`
+                            }else if(indexedit == index){
+                                return `<tr>
+                                    <td>${index+1}</td>
+                                    <td> <input type="text" value="${val.username}" placeholder="username" id="editusername${index}"></td>
+                                    <td> <input type="text" value="${val.email}" placeholder="username" id="editemail${index}"></td>
+                                    
+                                    <td>
+                                        <select id="editrole${index}">
+                                            
+                                            </select></td>
+                                            <td>
+                                                <input type="button" value="Yes" onclick="onEditYes(${index})">
+                                                <input type="button" value="No" onclick="onEditNo()">
+                                                </td>
+                                                </tr>`
+                                            }
+                                            return `<tr>
+                                                        <td>${index+1}</td>
+                                                        <td>${val.username}</td>
+                                                        <td>${val.email}</td>
+                                                        <td>${val.role}</td>
+                                                        <td>
+                                                        <input type="button" value="EDIT" onclick="onEditClick(${index})">
+                                                        <input type="button" value="DELETE" onclick="onDeleteClick(${index})">
+                                                        </td>
+                                                        </tr>`
+                                                        
+                                                        
+                                                            
+                            })
+                            document.getElementById('renderData').innerHTML=result.join('')
+                        }
+                        
+    const printRole = function(){
+    var result=role.map((val,index)=>{
+     return `<option value=${index}>${val}</option>`
+     })
+    document.getElementById('peran').innerHTML=result.join('')
+    }
+    
+
+    const printEditRole=function(peran){
+        var result = ''
+        for(i=0;i<role.length;i++){
+            if(role[i] == peran){
+                resul+= `<option selected value=${i}>${role[i]}</option>`
+            }else{
+                result+=`<option value=${i}>${role[i]}</option>`
+            }
+        }
+        return result
+    }
+    
+    const onDeleteClick=function(index){
+        indexdelete=index
+        printData()
+    }
+
+    const onDeleteYes=function(index){
+        ListUser.splice(index,1)
+        printData()
+    }
+
+    const onDeleteNo=function(){
+        indexdelete=-1
+        printData()
+    }
+
+    const onEditClick=function(index){
+        indexedit=index
+        printData()
+    }
+
+    const onEditNo=function(){
+        indexedit=-1
+        printData()
+    }
+
+    const onEditYes=function(index){
+        var editUsername = document.getElementById('editusername'+indexedit).value
+        var editEmail = document.getElementById('editemail'+indexedit).value
+        var editRole = document.getElementById('editrole'+indexedit).value
+        ListUser[index].username=editUsername
+        ListUser[index].email=editEmail
+        ListUser[index].role=editRole
+        printData()
+    }
+
+
+
+</script>
+</html>
